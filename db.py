@@ -1,7 +1,11 @@
+import os
 from pymongo import MongoClient
 
+# Read connection string from environment variable (safer than hardcoding)
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/QURAN?retryWrites=true&w=majority")
+
 def get_all_verses():
-    client = MongoClient("mongodb://localhost:27017/")
+    client = MongoClient(MONGO_URI)
     db = client["QURAN"]
     collection = db["quran"]
     all_verses = []
@@ -19,21 +23,22 @@ def get_all_verses():
     return all_verses
 
 
-
-
 def get_verse_by_surah_and_ayah(surah_number: int, ayah_number: int) -> dict | None:
-    client = MongoClient("mongodb://localhost:27017/")
+    client = MongoClient(MONGO_URI)
     db = client["QURAN"]
     collection = db["quran"]
 
     doc = collection.find_one({ "number": surah_number })
     if not doc:
+        client.close()
         return None
 
     for verse in doc.get("verses", []):
         if verse.get("number") == ayah_number:
+            client.close()
             return {
                 "text": verse.get("text", {}).get("ar", "")
             }
 
+    client.close()
     return None
