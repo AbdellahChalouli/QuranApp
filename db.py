@@ -2,7 +2,7 @@ import os
 from pymongo import MongoClient
 
 # Read connection string from environment variable (safer than hardcoding)
-MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/QURAN?retryWrites=true&w=majority")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://abdellah:Caw8RouI3pR7hkJf@cluster0.fkhd8hh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 def get_all_verses():
     client = MongoClient(MONGO_URI)
